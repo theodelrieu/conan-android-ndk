@@ -13,6 +13,8 @@ Create a profile for cross building and including this package:
     [settings]
     os=Android
     os.api_level=21
+    compiler=clang
+    compiler.version=7.0
     arch=armv7
 
     [build_requires]
