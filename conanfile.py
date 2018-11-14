@@ -184,7 +184,7 @@ class AndroidNDKConan(ConanFile):
         # do not re-export libgcc symbols in every binary
         linker_flags = ["-Wl,--exclude-libs,libgcc.a", "-Wl,--exclude-libs,libatomic.a", "--target=%s" % target]
         linker_flags.append("--gcc-toolchain=%s" % toolchain_root_path)
-        # do not use system libc++
+        # do not use system libstdc++
         # different sysroots for linking/compiling
         linker_flags.extend(["-nostdlib++", "--sysroot=%s" % platform_path])
         # set C++ library search path
