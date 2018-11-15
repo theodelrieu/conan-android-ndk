@@ -1,0 +1,43 @@
+language: generic
+
+env:
+   global:
+     - CONAN_PIP_INSTALL: "--user"
+     - CONAN_REFERENCE: "android-ndk/r18"
+     - CONAN_USERNAME: "theodelrieu"
+     - CONAN_LOGIN_USERNAME: "theodelrieu"
+     - CONAN_CHANNEL: "testing"
+     - CONAN_UPLOAD: "https://api.bintray.com/conan/theodelrieu/conan-repo"
+     - CONAN_STABLE_BRANCH_PATTERN: "release/*"
+
+os:
+  - linux
+  - osx
+
+dist: xenial
+
+addons:
+  apt:
+    packages:
+      - python-pip
+      - python-setuptools
+      - python-wheel
+    update: true
+
+  homebrew:
+    packages:
+      - python2
+    update: true
+
+matrix:
+  - os: linux
+
+  - os: osx
+    osx_image: xcode9.3
+
+install:
+  - .travis/install.sh
+
+script:
+  - .travis/build.sh
+
