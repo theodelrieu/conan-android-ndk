@@ -23,4 +23,4 @@ Create a profile for cross building and including this package:
 
 Go to your project and cross-build your dependency tree with this toolchain:
 
-    conan install . --profile android_profile
+    conan install . --profile android_profile --build missing
