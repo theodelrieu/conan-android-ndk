@@ -221,7 +221,7 @@ class AndroidNDKConan(ConanFile):
             pie_flags.append("-fPIE")
         else:
             pie_flags.append("-fpie")
-        exe_linker_flags = linker_flags.copy()
+        exe_linker_flags = linker_flags[:]
         exe_linker_flags.extend(["-Wl,--gc-sections", "-Wl,-z,nocopyreloc"])
         exe_linker_flags.extend(pie_flags)
 
