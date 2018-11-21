@@ -13,6 +13,7 @@ env:
 os:
   - linux
   - osx
+  - windows
 
 dist: xenial
 
@@ -31,6 +32,8 @@ addons:
 
 matrix:
   - os: linux
+
+  - os: windows
 
   - os: osx
     osx_image: xcode9.3
