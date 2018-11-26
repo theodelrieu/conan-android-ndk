@@ -11,11 +11,11 @@ set(ANDROID_STL $ENV{CONAN_ANDROID_STL})
 unset(CMAKE_C_STANDARD_LIBRARIES CACHE)
 unset(CMAKE_CXX_STANDARD_LIBRARIES CACHE)
 
-# This would break every find_* methods if left undefined...
-set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE NEVER)
-set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY NEVER)
-set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE NEVER)
-set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+# Setting to BOTH will allow CMake to find zlib while still finding other Conan packages
+set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE BOTH)
+set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY BOTH)
+set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE BOTH)
+set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM BOTH)
 
 # Finally, include the Android NDK CMake Toolchain
 include(${CMAKE_CURRENT_LIST_DIR}/build/cmake/android.toolchain.cmake)
