@@ -262,3 +262,4 @@ class AndroidNDKConan(ConanFile):
         self.info.options.arm_mode = "ANY"
         self.info.options.libcxx = "ANY"
         self.info.settings.os.api_level = "ANY"
+        self.info.include_build_settings()
