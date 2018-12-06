@@ -149,14 +149,13 @@ class AndroidNDKConan(ConanFile):
         compiler_flags.append("-isystem%s" % os.path.join(stl_path, "include"))
         # Find asm files
         compiler_flags.append("-isystem%s" % os.path.join(sysroot_path, "usr", "include", self.header_triple))
-        compiler_flags.append("-isystem%s" % os.path.join(sysroot_path, "usr", "include"))
         target = self.llvm_triple
         compiler_flags.append("--target=%s" % target)
         compiler_flags.append("--sysroot=%s" % sysroot_path)
         compiler_flags.extend(["-g", "-DANDROID", "-ffunction-sections", "-funwind-tables", "-fstack-protector-strong", "-no-canonical-prefixes"])
         # --gcc-toolchain is set by CMAKE_<LANG>_COMPILER_EXTERNAL_TOOLCHAIN
         compiler_flags.append("--gcc-toolchain=%s" % toolchain_root_path)
-        
+
         if self.settings.arch == "armv7":
             if self.options.neon:
                 compiler_flags.append("-mfpu=neon")
