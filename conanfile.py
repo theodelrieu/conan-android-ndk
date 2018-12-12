@@ -89,12 +89,15 @@ class AndroidNDKConan(ConanFile):
             del self.options.arm_mode
             del self.options.neon
 
-        if int(str(self.settings.os.api_level)) < 16:
-            # The NDK cmake toolchain automatically raise the api level to 16
-            # TODO do the same thing or keep raising?
+        api_level = int(str(self.settings.os.api_level))
+        # The NDK's CMake Toolchain file automatically raise the API level to 16
+        # It also raises the API level to 21 on 64-bit platform
+        # But this does not work well with Conan settings and package IDs...
+        # Hence the exceptions
+        if api_level < 16:
             raise Exception("Minimum API level supported is 16")
-
-    def configure(self):
+        if api_level < 21 and self.settings.arch in ["x86_64", "armv8"]:
+            raise Exception("64-bit platforms require API level 21+")
         if self.settings.compiler != "clang":
             raise Exception("clang is the only supported compiler")
         if self.settings.compiler.version != "7.0":
