@@ -243,9 +243,12 @@ class AndroidNDKConan(ConanFile):
         clangxx = "%s/clang++%s" % (llvm_toolchain_prefix, suffix)
         self.env_info.CC = clang
         self.env_info.CXX = clangxx
+        self.env_info.CPP = "%s -E" % clangxx
         self.env_info.CCAS = clang
         self.env_info.CFLAGS = " ".join(self.cpp_info.cflags)
+        self.env_info.CPPFLAGS = " ".join(self.cpp_info.cflags)
         self.env_info.CXXFLAGS = " ".join(self.cpp_info.cppflags)
+        self.env_info.ASFLAGS = " ".join(self.cpp_info.cflags)
         # There is no env var for executable linker flags...
         self.env_info.LDFLAGS = " ".join(self.cpp_info.sharedlinkflags)
         self.env_info.AR = "%sar%s" % (toolchain_prefix, suffix)
