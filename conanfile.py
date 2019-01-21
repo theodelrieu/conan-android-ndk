@@ -1,8 +1,6 @@
 from conans import ConanFile, tools
 import os
 
-from os import unlink
-
 ANDROID_ABIS = {"x86": "x86",
                 "x86_64": "x86_64",
                 "armv7": "armeabi-v7a",
@@ -128,7 +126,7 @@ class AndroidNDKConan(ConanFile):
         tools.download(url, "ndk.zip")
         tools.check_sha1("ndk.zip", sha1)
         tools.unzip("ndk.zip", keep_permissions=True)
-        unlink("ndk.zip")
+        os.unlink("ndk.zip")
 
     def package(self):
         self.copy("*", dst="", src=self.zip_folder, keep_path=True, symlinks=True)
