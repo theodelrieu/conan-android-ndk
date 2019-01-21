@@ -1,4 +1,5 @@
 from conans import ConanFile, tools
+import posixpath
 import os
 
 ANDROID_ABIS = {"x86": "x86",
@@ -34,6 +35,10 @@ class AndroidNDKConan(ConanFile):
     def translate_arch(self, arch_map):
         arch_str = str(self.settings.arch)
         return arch_map.get(arch_str, arch_str)
+
+    @property
+    def posix_package_folder(self):
+        return posixpath.join(*self.package_folder.split('\\'))
 
     @property
     def host(self):
@@ -134,22 +139,22 @@ class AndroidNDKConan(ConanFile):
 
     def package_info(self):
         android_platform = "android-%s" % self.settings.os.api_level
-        platform_path = os.path.join(self.package_folder, "platforms", android_platform, "arch-%s" % self.sysroot_abi)
+        platform_path = posixpath.join(self.posix_package_folder, "platforms", android_platform, "arch-%s" % self.sysroot_abi)
         # This cannot be considered to be the "real" sysroot, since arch-specific files are in a subfolder
-        sysroot_path = os.path.join(self.package_folder, "sysroot")
-        stl_path = os.path.join(self.package_folder, "sources", "cxx-stl", "llvm-libc++")
-        stl_abi_path = os.path.join(self.package_folder, "sources", "cxx-stl", "llvm-libc++abi")
-        toolchain_root_path = os.path.join(self.package_folder, "toolchains", "%s-4.9" % self.toolchain_triple, "prebuilt", self.host)
+        sysroot_path = posixpath.join(self.posix_package_folder, "sysroot")
+        stl_path = posixpath.join(self.posix_package_folder, "sources", "cxx-stl", "llvm-libc++")
+        stl_abi_path = posixpath.join(self.posix_package_folder, "sources", "cxx-stl", "llvm-libc++abi")
+        toolchain_root_path = posixpath.join(self.posix_package_folder, "toolchains", "%s-4.9" % self.toolchain_triple, "prebuilt", self.host)
 
-        llvm_toolchain_prefix = os.path.join(self.package_folder, "toolchains", "llvm", "prebuilt", self.host, "bin")
-        toolchain_prefix = os.path.join(toolchain_root_path, "bin", "%s-" % self.toolchain_name)
+        llvm_toolchain_prefix = posixpath.join(self.posix_package_folder, "toolchains", "llvm", "prebuilt", self.host, "bin")
+        toolchain_prefix = posixpath.join(toolchain_root_path, "bin", "%s-" % self.toolchain_name)
 
         # All those flags are taken from the NDK's android.toolchain.cmake file.
         # Set C library headers at the end of search path, otherwise #include_next will fail in C++ STL
-        compiler_flags = ["-isystem%s" % os.path.join(stl_abi_path, "include")]
-        compiler_flags.append("-isystem%s" % os.path.join(stl_path, "include"))
+        compiler_flags = ["-isystem%s" % posixpath.join(stl_abi_path, "include")]
+        compiler_flags.append("-isystem%s" % posixpath.join(stl_path, "include"))
         # Find asm files
-        compiler_flags.append("-isystem%s" % os.path.join(sysroot_path, "usr", "include", self.header_triple))
+        compiler_flags.append("-isystem%s" % posixpath.join(sysroot_path, "usr", "include", self.header_triple))
         target = self.llvm_triple
         compiler_flags.append("--target=%s" % target)
         compiler_flags.append("--sysroot=%s" % sysroot_path)
@@ -188,7 +193,7 @@ class AndroidNDKConan(ConanFile):
         # different sysroots for linking/compiling
         linker_flags.extend(["-nostdlib++", "--sysroot=%s" % platform_path])
         # set C++ library search path
-        linker_flags.append("-L%s" % os.path.join(stl_path, "libs", self.android_abi))
+        linker_flags.append("-L%s" % posixpath.join(stl_path, "libs", self.android_abi))
         # link default libraries
         if self.options.libcxx == "static":
             linker_flags.extend(["-lc++_static", "-lc++abi"])
@@ -200,7 +205,7 @@ class AndroidNDKConan(ConanFile):
                 linker_flags.append("-lunwind")
         linker_flags.extend(["-latomic", "-lm"])
         if int(str(self.settings.os.api_level)) < 21:
-            compiler_flags.append("-isystem%s" % os.path.join(self.package_folder, "sources", "android", "support", "include"))
+            compiler_flags.append("-isystem%s" % posixpath.join(self.posix_package_folder, "sources", "android", "support", "include"))
             linker_flags.append("-landroid_support")
 
         # do not disable relro (default)
@@ -253,7 +258,7 @@ class AndroidNDKConan(ConanFile):
         self.env_info.CONAN_ANDROID_STL = "c++_%s" % self.options.libcxx
         self.env_info.CONAN_ANDROID_ABI = str(self.android_abi)
         self.env_info.CONAN_ANDROID_NATIVE_API_LEVEL = str(self.settings.os.api_level)
-        self.env_info.CONAN_CMAKE_TOOLCHAIN_FILE = os.path.join(self.package_folder, "android-toolchain.cmake")
+        self.env_info.CONAN_CMAKE_TOOLCHAIN_FILE = posixpath.join(self.posix_package_folder, "android-toolchain.cmake")
 
     def package_id(self):
         self.info.settings.arch = "ANY"
