@@ -136,7 +136,13 @@ class AndroidNDKConan(ConanFile):
         os.unlink("ndk.zip")
 
     def package(self):
-        self.copy("*", dst="", src=self.zip_folder, keep_path=True, symlinks=True)
+        # some STL headers in experimental/ simply contain an #error
+        # This can cause invalid feature detection (via __has_include or similar, e.g. Boost.Asio tries to use experimental/string_view)
+        # Therefore, do not copy those files
+        files_to_exclude = ["any", "chrono", "numeric", "optional", "ratio", "string_view", "system_error", "tuple"]
+        exclude_list = ["*/experimental/%s" % f for f in files_to_exclude]
+
+        self.copy("*", dst="", src=self.zip_folder, keep_path=True, symlinks=True, excludes=exclude_list)
         self.copy("android-toolchain.cmake")
 
     def package_info(self):
