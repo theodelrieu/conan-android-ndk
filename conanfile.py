@@ -27,6 +27,8 @@ class AndroidNDKConan(ConanFile):
     options = { "libcxx": ["static", "shared"], "arm_mode": ["thumb", "arm"], "neon": [True, False] }
     default_options = "libcxx=static", "arm_mode=thumb", "neon=True"
     exports_sources = "android-toolchain.cmake"
+    short_paths = True
+    no_copy_source = True
 
     @property
     def zip_folder(self):
