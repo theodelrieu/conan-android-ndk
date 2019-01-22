@@ -1,12 +1,18 @@
 build: false
 
+cache:
+  - C:\projects\deps\ninja
+
 environment:
     PYTHON: "C:\\Python37"
+    CONAN_CMAKE_GENERATOR: Ninja
+    CONAN_USERNAME: "theodelrieu"
+    CONAN_LOGIN_USERNAME: "theodelrieu"
+    CONAN_CHANNEL: "testing"
+    CONAN_UPLOAD: "https://api.bintray.com/conan/theodelrieu/conan-repo"
+    CONAN_STABLE_BRANCH_PATTERN: "release/*"
 
     matrix:
-        - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-          CONAN_VISUAL_VERSIONS: 15
-          ARCH: x86
         - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
           CONAN_VISUAL_VERSIONS: 15
           ARCH: x86_64
@@ -16,6 +22,12 @@ install:
   - pip.exe install conan --upgrade
   - pip.exe install conan_package_tools bincrafters_package_tools
   - conan user # It creates the conan data directory
+  - set PATH=C:\projects\deps\ninja;%PATH%
+  - |-
+    if exist "C:\projects\deps\ninja\" set GETNINJA=rem
+    %GETNINJA% appveyor DownloadFile "https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-win.zip" -FileName ninja.zip
+    %GETNINJA% 7z x ninja.zip -oC:\projects\deps\ninja > nul
+    %GETNINJA% ninja --version
 
 test_script:
     - python build.py
