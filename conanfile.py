@@ -249,6 +249,7 @@ class AndroidNDKConan(ConanFile):
             suffix = ""
         clang = "%s/clang%s" % (llvm_toolchain_prefix, suffix)
         clangxx = "%s/clang++%s" % (llvm_toolchain_prefix, suffix)
+        self.env_info.PATH.append(llvm_toolchain_prefix)
         self.env_info.CC = clang
         self.env_info.CXX = clangxx
         self.env_info.CPP = "%s -E" % clangxx
