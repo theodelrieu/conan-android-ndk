@@ -4,7 +4,18 @@ Build requirement to cross build to Android.
 
 ## Setup
 
-Create a profile for cross building and including this package:
+Since this package is not *yet* on conan-center, you must either:
+
+1. Add my Bintray remote
+1. Clone/fork this repository and create the package yourself
+
+Here is how to add the remote:
+
+```shell
+$ conan remote add theodelrieu https://api.bintray.com/conan/theodelrieu/conan-repo
+```
+
+Now, create a profile for cross building and including this package:
 
 **android_profile**
     
