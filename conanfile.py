@@ -153,9 +153,9 @@ class AndroidNDKConan(ConanFile):
         stl_path = posixpath.join(self.posix_package_folder, "sources", "cxx-stl", "llvm-libc++")
         stl_abi_path = posixpath.join(self.posix_package_folder, "sources", "cxx-stl", "llvm-libc++abi")
         toolchain_root_path = posixpath.join(self.posix_package_folder, "toolchains", "%s-4.9" % self.toolchain_triple, "prebuilt", self.host)
+        toolchain_bin_path = posixpath.join(toolchain_root_path, self.toolchain_triple, "bin")
 
         llvm_toolchain_prefix = posixpath.join(self.posix_package_folder, "toolchains", "llvm", "prebuilt", self.host, "bin")
-        toolchain_prefix = posixpath.join(toolchain_root_path, "bin", "%s-" % self.toolchain_name)
 
         # All those flags are taken from the NDK's android.toolchain.cmake file.
         # Set C library headers at the end of search path, otherwise #include_next will fail in C++ STL
@@ -247,9 +247,9 @@ class AndroidNDKConan(ConanFile):
             suffix = ".exe"
         else:
             suffix = ""
-        clang = "%s/clang%s" % (llvm_toolchain_prefix, suffix)
-        clangxx = "%s/clang++%s" % (llvm_toolchain_prefix, suffix)
-        lld = "%s/ld.lld%s" % (llvm_toolchain_prefix, suffix)
+        clang = posixpath.join(llvm_toolchain_prefix, "clang%s" % suffix)
+        clangxx = posixpath.join(llvm_toolchain_prefix, "clang++%s" % suffix)
+        lld = posixpath.join(llvm_toolchain_prefix, "ld.lld%s" % suffix)
         self.env_info.PATH.append(llvm_toolchain_prefix)
         self.env_info.CC = clang
         self.env_info.CXX = clangxx
@@ -262,8 +262,8 @@ class AndroidNDKConan(ConanFile):
         self.env_info.ASFLAGS = " ".join(self.cpp_info.cflags)
         # There is no env var for executable linker flags...
         self.env_info.LDFLAGS = " ".join(self.cpp_info.sharedlinkflags)
-        self.env_info.AR = "%sar%s" % (toolchain_prefix, suffix)
-        self.env_info.RANLIB = "%sranlib%s" % (toolchain_prefix, suffix)
+        self.env_info.AR = posixpath.join(toolchain_bin_path, "ar%s" % suffix)
+        self.env_info.RANLIB = posixpath.join(toolchain_bin_path, "ranlib%s" % suffix)
         # Provide a CMake Toolchain file, the two first flags are used inside android-toolchain.cmake
         if self.settings.arch == "armv7":
             self.env_info.CONAN_ANDROID_ARM_MODE = str(self.options.arm_mode)
