@@ -249,13 +249,14 @@ class AndroidNDKConan(ConanFile):
             suffix = ""
         clang = posixpath.join(llvm_toolchain_prefix, "clang%s" % suffix)
         clangxx = posixpath.join(llvm_toolchain_prefix, "clang++%s" % suffix)
-        lld = posixpath.join(llvm_toolchain_prefix, "ld.lld%s" % suffix)
+        linker = posixpath.join(llvm_toolchain_prefix, "ld%s" % suffix)
+
         self.env_info.PATH.append(llvm_toolchain_prefix)
         self.env_info.CC = clang
         self.env_info.CXX = clangxx
         self.env_info.CPP = "%s -E" % clangxx
         self.env_info.CCAS = clang
-        self.env_info.LD = lld
+        self.env_info.LD = linker
         self.env_info.CFLAGS = " ".join(self.cpp_info.cflags)
         self.env_info.CPPFLAGS = " ".join(self.cpp_info.cflags)
         self.env_info.CXXFLAGS = " ".join(self.cpp_info.cppflags)
