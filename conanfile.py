@@ -153,7 +153,7 @@ class AndroidNDKConan(ConanFile):
         stl_path = posixpath.join(self.posix_package_folder, "sources", "cxx-stl", "llvm-libc++")
         stl_abi_path = posixpath.join(self.posix_package_folder, "sources", "cxx-stl", "llvm-libc++abi")
         toolchain_root_path = posixpath.join(self.posix_package_folder, "toolchains", "%s-4.9" % self.toolchain_triple, "prebuilt", self.host)
-        toolchain_bin_path = posixpath.join(toolchain_root_path, self.toolchain_triple, "bin")
+        toolchain_bin_path = posixpath.join(toolchain_root_path, self.header_triple, "bin")
 
         llvm_toolchain_prefix = posixpath.join(self.posix_package_folder, "toolchains", "llvm", "prebuilt", self.host, "bin")
 
